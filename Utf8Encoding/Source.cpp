@@ -1,5 +1,5 @@
-﻿#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-#define _CRT_SECURE_NO_WARNINGS
+﻿//#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+//#define _CRT_SECURE_NO_WARNINGS
 
 #include <Windows.h>
 #include <CommCtrl.h>
@@ -40,7 +40,6 @@ using namespace std;
 #pragma comment(lib, "gdi32.lib")
 
 void SmallInfo();
-void DrawBorder();
 
 int main()
 {
@@ -77,8 +76,4 @@ void SmallInfo()
   cout << u"El código de página de la consola es: " << GetConsoleCP() << endl;
   cout << L'\n';
   cout << U"La localidad usada es: " << cout.getloc().name() << L'\n';
-}
-
-void DrawBorder()
-{
 }

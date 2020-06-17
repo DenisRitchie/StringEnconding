@@ -1,0 +1,4 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define FACET_FACTORY(facet_t) template<> struct FacetType<facet_t::intern_type> { using facet_t = facet_t; using external_t = facet_t::extern_type; using internal_t = facet_t::intern_type; using mbstate_t = facet_t::state_type; };

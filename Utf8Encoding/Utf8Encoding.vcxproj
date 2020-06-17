@@ -156,5 +156,8 @@
     <ClInclude Include="Utf8Extensions.h" />
     <ClInclude Include="Utf8Functions.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

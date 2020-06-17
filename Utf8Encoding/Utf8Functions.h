@@ -101,7 +101,6 @@ void Utf16FunctionsTest_AnsiToUtf16()
   cout << u"\nLa cadena es: " << u16str << endl;
 }
 
-
 void Utf32FunctionsTest_AnsiToUtf32()
 {
   std::setlocale(LC_ALL, "en_US.utf8");
