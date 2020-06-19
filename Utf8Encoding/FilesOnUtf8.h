@@ -161,6 +161,50 @@ void ReadUtf8()
   }
 }
 
+void ReadUtf8v2()
+{
+  ifstream file{ "TestFileUtf8.txt", ios::in | ios::binary };
+
+  if (file.is_open())
+  {
+    vector<u16string> contents;
+
+    file.seekg(0, ios::end);
+    u8string u8content(file.tellg(), u8'\0');
+
+    file.seekg(0, ios::beg);
+    file.read((LPSTR)(LPVOID)u8content.data(), u8content.size());
+    file.close();
+
+    auto &facet = use_facet<facet_utf16_t>(locale(".65001"));
+    u16string u16content(u8content.size() / sizeof(char16_t) + sizeof(char16_t) * facet.max_length(), u'\0');
+
+    mbstate_t mbstate{ };
+    u8string::const_pointer from_next;
+    u16string::pointer to_next;
+
+    facet.in(mbstate,
+             u8content.data(), u8content._Unchecked_end(), from_next,
+             u16content.data(), u16content._Unchecked_end(), to_next);
+
+    u16content.resize(to_next - u16content.data());
+    u16string_view view = u16content;
+
+    size_t pos;
+    u16string_view::const_pointer end = view.data() + view.size() + 1;
+
+    while ((pos = view.find(u'\n')) != u16string_view::npos)
+    {
+      u16string_view temp = view.substr(0, pos);
+      contents.emplace_back(temp.data(), temp.size());
+      view = u16string_view(temp._Unchecked_end() + 1, end - (temp._Unchecked_end() + 1));
+    }
+
+    contents.emplace_back(view.data(), view.size());
+    PrintOnConsoleWindow(contents);
+  }
+}
+
 void WriteUtf16()
 {
   ofstream file{ "TestFileUtf16.txt", ios::out | ios::binary };
@@ -261,7 +305,7 @@ void Test_01_FileOnUtf8()
   // https://unicode.org/emoji/charts/full-emoji-modifiers.html
 
   WriteUtf8();
-  ReadUtf8();
+  ReadUtf8v2();
 
   /*WriteUtf16();
   ReadUtf16();*/
