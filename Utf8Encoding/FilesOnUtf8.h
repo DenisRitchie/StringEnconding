@@ -205,6 +205,47 @@ void ReadUtf8v2()
   }
 }
 
+void ReadUtf8v3()
+{
+  ifstream file{ "TestFileUtf8.txt", ios::in | ios::binary };
+
+  if (file.is_open())
+  {
+    vector<u16string> contents;
+
+    file.seekg(0, ios::end);
+    string u8content(file.tellg(), '\0');
+
+    file.seekg(0, ios::beg);
+    file.read(u8content.data(), u8content.size());
+    file.close();
+
+    u16string u16content;
+    mbstate_t mbstate{ };
+    char16_t c16;
+
+    string::const_pointer u8ptr = u8content.data();
+    string::pointer u8end = u8content.data() + u8content.size() + 1; //'\0'
+
+    while (size_t rc = mbrtoc16(&c16, u8ptr, u8end - u8ptr, &mbstate))
+    {
+      if (c16 == u'\n')
+      {
+        contents.emplace_back(move(u16content));
+      }
+      else
+      {
+        u16content.push_back(c16);
+      }
+
+      u8ptr += rc;
+    }
+
+    contents.emplace_back(move(u16content));
+    PrintOnConsoleWindow(contents);
+  }
+}
+
 void WriteUtf16()
 {
   ofstream file{ "TestFileUtf16.txt", ios::out | ios::binary };
@@ -305,7 +346,7 @@ void Test_01_FileOnUtf8()
   // https://unicode.org/emoji/charts/full-emoji-modifiers.html
 
   WriteUtf8();
-  ReadUtf8v2();
+  ReadUtf8();
 
   /*WriteUtf16();
   ReadUtf16();*/
